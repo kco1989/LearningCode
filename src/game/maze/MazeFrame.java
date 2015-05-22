@@ -132,6 +132,20 @@ public class MazeFrame extends JFrame {
 		 * @param box
 		 */
 		private void draw(Graphics g, Box box) {
+			if(box.getIndex() == maze.getStartPoint() || box.getIndex() == maze.getOverPoint()){
+				int column = box.getIndex() / maze.getMaxColumn();
+				int row = box.getIndex() % maze.getMaxColumn();
+				int x = START_X + LINE_SIZE * row ;//+ LINE_SIZE / 2;
+				int y = START_Y + LINE_SIZE * column;// + LINE_SIZE / 2;
+				Color color = g.getColor();
+				if(box.getIndex() == maze.getStartPoint()){
+					g.setColor(Color.BLUE);
+				}else{
+					g.setColor(Color.green);
+				}
+				g.fillOval(x, y, LINE_SIZE , LINE_SIZE);
+				g.setColor(color);
+			}
 			for (int i = 0; i < box.getWalls().length; i++) {
 				draw(g,box,i);
 			}
@@ -184,4 +198,6 @@ public class MazeFrame extends JFrame {
 			g.drawLine(x1, y1, x2, y2);
 		}
 	} 
+	
+	
 }

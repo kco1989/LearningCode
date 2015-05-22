@@ -16,6 +16,7 @@ import java.util.Set;
  */
 public class Maze {
 
+	
 	/** 迷宫的最大行*/
 	private int maxRow;
 	/** 迷宫的最大列 */
@@ -61,11 +62,11 @@ public class Maze {
 			set.add(i);
 			map.put(i, set);
 		}
-		startPoint = 0;
-		overPoint = mazeArea.length - 1;
+		startPoint = new Random().nextInt(mazeArea.length - 1);
+		overPoint = new Random().nextInt(mazeArea.length - 1);
 		
-		mazeArea[startPoint].setWalls(Box.LEFT, Wall.ACCESS);
-		mazeArea[overPoint].setWalls(Box.RIGHT, Wall.ACCESS);
+//		mazeArea[startPoint].setWalls(Box.LEFT, Wall.ACCESS);
+//		mazeArea[overPoint].setWalls(Box.RIGHT, Wall.ACCESS);
 		
 	}
 	/**
@@ -253,7 +254,7 @@ public class Maze {
 		}
 		List<Integer> solution = new ArrayList<Integer>();
 		int[] mazeTag = new int[maxRow * maxColumn];
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 4; i++) {
 			tryRun(mazeTag,startPoint,i,0);
 		}
 		int minCount = mazeTag[overPoint];
@@ -334,5 +335,19 @@ public class Maze {
 			tryRun(mazeTag,nextIndex,i,value + 1);
 		}
 	}
+	public int getStartPoint() {
+		return startPoint;
+	}
 
+	public void setStartPoint(int startPoint) {
+		this.startPoint = startPoint;
+	}
+
+	public int getOverPoint() {
+		return overPoint;
+	}
+
+	public void setOverPoint(int overPoint) {
+		this.overPoint = overPoint;
+	}
 }
