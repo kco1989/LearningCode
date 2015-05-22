@@ -7,10 +7,10 @@ import java.util.concurrent.ExecutorService;
 
 
 /**
- * socket监听服务
+ * socket鐩戝惉鏈嶅姟
  * @author kco1989
  * @email  kco1989@qq.com
- * @date   2015年5月7日
+ * @date   2015骞�5鏈�7鏃�
  */
 public class StartServerListen implements Runnable {
 
@@ -36,7 +36,7 @@ public class StartServerListen implements Runnable {
 		while(isRunning){
 			try {
 				Socket socket = serverSocket.accept();
-				//System.out.println("有socket接入"+socket);
+				//System.out.println("鏈塻ocket鎺ュ叆"+socket);
 				pool.execute(new RevcSocketData(socket));
 			} catch (Exception e) {
 				e.printStackTrace();
