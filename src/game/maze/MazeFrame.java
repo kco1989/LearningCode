@@ -72,10 +72,11 @@ public class MazeFrame extends JFrame {
 			maze.buildMazeArea();
 			//solution = maze.getSolution();
 			System.out.println(maze);
-			isRun = false;
+			//isRun = false;
 		}
 		public void next() {
 			maze.buildMazeArea();
+			isRun = false;
 			repaint();
 		}
 		public void run() {
@@ -95,13 +96,18 @@ public class MazeFrame extends JFrame {
 			
 			if(isRun){
 				draw(g,maze.getSolution());
-				isRun = false;
 			}
 		}
 
 		private void draw(Graphics g, List<Integer> solution) {
 			g.setColor(Color.red);
 			for (int i = 1; i < solution.size(); i++) {
+				try {
+					Thread.sleep(25);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				int preIndex = solution.get(i - 1);
 				int currentIndex = solution.get(i);
 				draw(g,preIndex,currentIndex);
