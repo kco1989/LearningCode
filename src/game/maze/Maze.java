@@ -31,7 +31,10 @@ public class Maze {
 	 * 如果map的keySet只剩下一个,说明所有的方块都已经连通了
 	 */
 	private Map<Integer, Set<Integer>> map;
-	
+	/** 迷宫开始点 */
+	private int startPoint;
+	/** 迷宫结束点*/
+	private int overPoint;
 	public Maze(int row,int column){
 		if(row < 3){
 			maxRow = 3;
@@ -53,15 +56,19 @@ public class Maze {
 			set.add(i);
 			map.put(i, set);
 		}
-		mazeArea[0].setWalls(Box.LEFT, Wall.ACCESS);
-		mazeArea[mazeArea.length - 1].setWalls(Box.RIGHT, Wall.ACCESS);
+		startPoint = 0;
+		overPoint = mazeArea.length - 1;
+		
+		mazeArea[startPoint].setWalls(Box.LEFT, Wall.ACCESS);
+		mazeArea[overPoint].setWalls(Box.RIGHT, Wall.ACCESS);
+		
 	}
 	/**
 	 * 查找与索引x等价的最小索引值
 	 * @param x
 	 * @return
 	 */
-	public int find(int x){
+	private int find(int x){
 		if(map.get(x) != null){
 			return x;
 		}
@@ -77,7 +84,7 @@ public class Maze {
 	 * @param x
 	 * @param y
 	 */
-	public void union(int x,int y){
+	private void union(int x,int y){
 		int findx = find(x);
 		int findy = find(y);
 		int min = Math.min(findx, findy);
@@ -95,7 +102,6 @@ public class Maze {
 			int currentIndex = getRandomIndex();
 			int dirction = getRandomDirection();
 			int nextIndex = getNextIndex(currentIndex,dirction);
-			//Box box = getNextBox(x,dirction);
 			if(nextIndex == -1){
 				continue;
 			}
@@ -176,7 +182,7 @@ public class Maze {
 	 * 随机索引需要连通的方块索引
 	 * @return
 	 */
-	public int getRandomIndex(){
+	private int getRandomIndex(){
 		List<Integer> keyList = new ArrayList<Integer>();
 		keyList.addAll(map.keySet());
 		int keyIndex = new Random().nextInt(keyList.size());
@@ -208,7 +214,7 @@ public class Maze {
 	 * 随机获取方向
 	 * @return
 	 */
-	public int getRandomDirection(){
+	private int getRandomDirection(){
 		return new Random().nextInt(4);
 	}
 	
@@ -226,10 +232,6 @@ public class Maze {
 		return maxRow;
 	}
 
-	public void setMazeArea(Box[] mazeArea) {
-		this.mazeArea = mazeArea;
-	}
-
 	public int getMaxColumn() {
 		return maxColumn;
 	}
@@ -245,10 +247,10 @@ public class Maze {
 		List<Integer> solution = new ArrayList<Integer>();
 		int[] mazeTag = new int[maxRow * maxColumn];
 		for (int i = 0; i < 3; i++) {
-			tryRun(mazeTag,0,i,0);
+			tryRun(mazeTag,startPoint,i,0);
 		}
-		int minCount = mazeTag[mazeTag.length - 1];
-		generateSolution(mazeTag,solution,mazeArea.length - 1,minCount);
+		int minCount = mazeTag[overPoint];
+		generateSolution(mazeTag,solution,overPoint,minCount);
 
 		for (int i = 0; i < maxRow; i++) {
 			for (int j = 0; j < maxColumn; j++) {
@@ -262,27 +264,31 @@ public class Maze {
 	
 	/**
 	 * 最短距离算法
-	 * @param mazeTag
-	 * @param solution
-	 * @param currentIndex
-	 * @param value
+	 * @param mazeTag	存放着迷路路径的集合
+	 * @param solution	存放最短距离的点的集合
+	 * @param currentIndex 当前位置
+	 * @param value	当前位置的值
 	 */
 	private void generateSolution(int[] mazeTag, List<Integer> solution, int currentIndex,
 			int value) {
-		if(currentIndex == 0){
+		//如果当前位置是开始点,则返回
+		if(currentIndex == startPoint){
 			solution.add(currentIndex);
 			return;
 		}
 		
 		for (int i = 0; i < 4; i++) {
+			//如果这个方向是一面墙,则返回
 			if(mazeArea[currentIndex].getWalls()[i] == Wall.BLOCK){
 				continue;
 			}
+			//获取下一个位置
 			int nextIndex = getNextIndex(currentIndex, i);
+			//该位置无效,则返回
 			if(nextIndex == -1){
 				continue;
 			}
-			
+			//该位置是最佳解得下一个点,则添加到currentIndex,再对这个点进行探索,探索结束返回
 			if(mazeTag[nextIndex] == (value - 1)){
 				solution.add(currentIndex);
 				generateSolution(mazeTag, solution, nextIndex, value - 1);
@@ -302,7 +308,7 @@ public class Maze {
 			return;
 		}
 		//如果已经到最后一块方块,则返回
-		if(currentIndex == mazeArea.length - 1){
+		if(currentIndex == overPoint){
 			return;
 		}
 		int nextIndex = getNextIndex(currentIndex, dirction);
