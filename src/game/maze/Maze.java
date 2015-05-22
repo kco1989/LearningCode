@@ -47,6 +47,11 @@ public class Maze {
 		}else{
 			maxColumn = column;
 		}
+		
+		init();
+	}
+	
+	private void init() {
 		isBulidOK = false;
 		mazeArea = new Box[maxRow * maxColumn];
 		map = new HashMap<Integer, Set<Integer>>();
@@ -98,6 +103,7 @@ public class Maze {
 	 * 创建迷宫
 	 */
 	public void buildMazeArea(){
+		init();
 		while(map.keySet().size() != 1){
 			int currentIndex = getRandomIndex();
 			int dirction = getRandomDirection();
@@ -132,6 +138,7 @@ public class Maze {
 		}
 		isBulidOK = true;
 	}
+	
 	
 	@Override
 	public String toString() {

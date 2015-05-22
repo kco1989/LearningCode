@@ -1,8 +1,11 @@
 package game.maze;
 
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Panel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -17,9 +20,34 @@ public class MazeFrame extends JFrame {
 		maze = new Maze(row, column);
 		setBounds(400, 100, 600 , 600);
 		setTitle("迷宫");
-		getContentPane().add(new MazePanl(maze));
+		Button btnRun = new Button("run");
+		Button btnNext = new Button("next");
+		MazePanl mazePanl = new MazePanl(maze);
+		mazePanl.add(btnRun);
+		mazePanl.add(btnNext);
+		getContentPane().add(mazePanl);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
+		
+		btnRun.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mazePanl.run();
+				System.out.println("run");
+			}
+			
+		});
+		btnNext.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("next");
+				mazePanl.next();
+			}
+			
+		});
+		
 		setVisible(true);
 		
 	}
@@ -35,13 +63,24 @@ public class MazeFrame extends JFrame {
 	 */
 	public static class MazePanl extends Panel{
 		private Maze maze;
-		private List<Integer> solution;
-		private static boolean isRrad = false;
+		//private List<Integer> solution;
+		private static boolean isDrawOver = false;
+		private static boolean isRun;
+		
 		public MazePanl(Maze maze){
 			this.maze = maze;
 			maze.buildMazeArea();
-			solution = maze.getSolution();
+			//solution = maze.getSolution();
 			System.out.println(maze);
+			isRun = false;
+		}
+		public void next() {
+			maze.buildMazeArea();
+			repaint();
+		}
+		public void run() {
+			isRun = true;
+			repaint();
 		}
 		/**
 		 * 更新界面
@@ -52,7 +91,12 @@ public class MazeFrame extends JFrame {
 			for (int i = 0; i < maze.getMazeArea().length; i++) {
 				draw(g,maze.getMazeArea()[i]);
 			}
-			draw(g,solution);
+			isDrawOver = true;
+			
+			if(isRun){
+				draw(g,maze.getSolution());
+				isRun = false;
+			}
 		}
 
 		private void draw(Graphics g, List<Integer> solution) {
