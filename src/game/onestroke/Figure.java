@@ -77,7 +77,7 @@ public class Figure {
 		}
 		System.out.println("this:" + this);
 		
-		Vertex vertex = (Vertex)vertexSet.toArray()[0];
+		Vertex vertex = getVertex((Vertex)vertexSet.toArray()[0]);
 		LinkedList<Vertex> list = new LinkedList<Vertex>();
 		LinkedList<Vertex> temp = null;
 		list.add(vertex);
@@ -121,7 +121,7 @@ public class Figure {
 				}
 			}
 		}else{
-			list.add(nextEdge.getEndVertex());
+			list.add(getVertex(nextEdge.getEndVertex()));
 			nextEdge.setKnow(true);
 			getEdge(nextEdge.getEndVertex(),nextEdge.getStartVertex()).setKnow(true);
 		}

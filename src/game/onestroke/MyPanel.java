@@ -36,20 +36,25 @@ public class MyPanel extends JPanel {
 						CircularLabel end = OneStrokeFrame.getCircularLabel(second.e.getName());
 						Color bak = g.getColor();
 						g.setColor(Color.green);
-						g.drawLine(start.getCircular().x + start.getRadius(), start.getCircular().y + start.getRadius(),
+						
+						drawLine(g,start.getCircular().x + start.getRadius(), start.getCircular().y + start.getRadius(),
 								end.getCircular().x + end.getRadius(), end.getCircular().y + end.getRadius());
 						g.setColor(bak);
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 						frist = second;
 						second = second.next;
 					}while(second != null);
 				}
 			}
 		}
+	}
+
+	private void drawLine(Graphics g, int x1, int y1, int x2, int y2) {
+		if(x2 == x1){
+			g.drawLine(x1, y1, x2, y2);
+			return;
+		}
+		int k = (y2 - y1)/(x2 - x1);
+		
+		
 	}
 }
